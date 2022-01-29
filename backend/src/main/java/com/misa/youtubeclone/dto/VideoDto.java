@@ -1,6 +1,7 @@
 package com.misa.youtubeclone.dto;
 
 import com.misa.youtubeclone.model.Comment;
+import com.misa.youtubeclone.model.Video;
 import com.misa.youtubeclone.model.VideoStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +21,14 @@ public class VideoDto {
     private String videoUrl;
     private VideoStatus videoStatus;
     private String thumbnailUrl;
+
+    public VideoDto(Video video) {
+        this.id = video.getId();
+        this.title = video.getTitle();
+        this.description = video.getDescription();
+        this.tags = video.getTags();
+        this.videoUrl = video.getVideoUrl();
+        this.videoStatus = video.getVideoStatus();
+        this.thumbnailUrl = video.getThumbnailUrl();
+    }
 }

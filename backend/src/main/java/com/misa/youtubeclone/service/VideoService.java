@@ -50,4 +50,8 @@ public class VideoService {
         videoRepository.save(video);
         return video.getThumbnailUrl();
     }
+
+    public VideoDto getVideoDetails(String videoId) {
+        return new VideoDto(getVideo(videoId));
+    }
 }

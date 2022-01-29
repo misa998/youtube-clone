@@ -35,4 +35,10 @@ public class VideoController {
     public VideoDto editVideoMetadata(@RequestBody VideoDto dto) {
         return videoService.editVideo(dto);
     }
+
+    @GetMapping("/{videoId}")
+    @SuppressWarnings("unused")
+    public VideoDto getVideoDetails(@PathVariable String videoId){
+        return videoService.getVideoDetails(videoId);
+    }
 }
