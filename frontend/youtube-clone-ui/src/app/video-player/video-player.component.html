@@ -27,3 +27,17 @@
     <source src="{{ videoUrl }}" type="video/mp4" />
   </video>
 </vg-player>
+
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe
+    class="embed-responsive-item"
+    [src]="videoUrl"
+    allowfullscreen
+    type="video/mp4"
+  ></iframe>
+</div>
+
+<video class="video-fluid" autoplay loop muted>
+  <source [src]="videoUrl" type="video/mp4" />
+</video>
+{{ videoUrl }}

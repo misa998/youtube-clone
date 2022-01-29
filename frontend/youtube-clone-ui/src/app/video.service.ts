@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UploadVideoResponse } from './upload-video/UploadVideoResponse';
@@ -39,6 +39,13 @@ export class VideoService {
   public getVideo(videoId: string): Observable<Video> {
     return this.httpClient.get<Video>(
       'http://localhost:8080/api/video/' + videoId
+    );
+  }
+
+  public saveVideo(videoMetadata: Video): Observable<Video> {
+    return this.httpClient.put<Video>(
+      'http://localhost:8080/api/video/',
+      videoMetadata
     );
   }
 }

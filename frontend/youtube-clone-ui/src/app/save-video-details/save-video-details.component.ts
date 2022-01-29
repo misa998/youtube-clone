@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SecurityContext } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../video.service';
+import { Video } from '../Video';
+import { DomSanitizer } from '@angular/platform-browser';
 // import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -26,15 +28,32 @@ export class SaveVideoDetailsComponent implements OnInit {
   videoId: string = '';
   fileSelected = false;
   videoUrl!: string;
+  thumbnailUrl!: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private videoService: VideoService // private snackBar: MatSnackBar
+    private videoService: VideoService, // private snackBar: MatSnackBar
+    private sanitizer: DomSanitizer
   ) {
+    // take id from the link
     this.videoId = this.activatedRoute.snapshot.params.videoId;
+    // get video from the database
     this.videoService.getVideo(this.videoId).subscribe((data) => {
-      this.videoUrl = data.videoUrl;
+      // sanitize the url
+      this.videoUrl = this.sanitizer.sanitize(
+        SecurityContext.RESOURCE_URL,
+        this.sanitizer.bypassSecurityTrustResourceUrl(data.videoUrl)
+      ) as string;
+      // this.videoUrl = data.videoUrl;
+      console.log(this.videoUrl);
+
+      this.thumbnailUrl = data.thumbnailUrl;
+      this.title.setValue(data.title);
+      this.description.setValue(data.description);
+      this.videoStatus.setValue(data.videoStatus);
+      this.tags = data.tags;
     });
+
     this.saveVideoForm = new FormGroup({
       title: this.title,
       description: this.description,
@@ -78,5 +97,20 @@ export class SaveVideoDetailsComponent implements OnInit {
         console.log(data);
         // this.snackBar.open('Thumbnail upload successful', 'OK');
       });
+  }
+
+  saveVideo() {
+    const videoMetadata: Video = {
+      id: this.videoId,
+      title: this.saveVideoForm.get('title')?.value,
+      description: this.saveVideoForm.get('description')?.value,
+      tags: this.tags,
+      videoStatus: this.saveVideoForm.get('videoStatus')?.value,
+      videoUrl: this.videoUrl,
+      thumbnailUrl: this.thumbnailUrl,
+    };
+    this.videoService.saveVideo(videoMetadata).subscribe((data) => {
+      console.log('Video metadata updated.');
+    });
   }
 }
