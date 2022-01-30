@@ -45,13 +45,13 @@ export class SaveVideoDetailsComponent implements OnInit {
         this.sanitizer.bypassSecurityTrustResourceUrl(data.videoUrl)
       ) as string;
       // this.videoUrl = data.videoUrl;
-      console.log(this.videoUrl);
+      console.log('Video url sanitized.');
 
       this.thumbnailUrl = data.thumbnailUrl;
       this.title.setValue(data.title);
       this.description.setValue(data.description);
       this.videoStatus.setValue(data.videoStatus);
-      this.tags = data.tags;
+      if (data.tags !== null) this.tags = data.tags;
     });
 
     this.saveVideoForm = new FormGroup({
@@ -64,14 +64,16 @@ export class SaveVideoDetailsComponent implements OnInit {
   ngOnInit(): void {}
 
   add(event: MatChipInputEvent): void {
+    console.log('Adding chip.');
     const value = (event.value || '').trim();
 
-    // Add our fruit
     if (value) {
       this.tags.push(value);
+      console.log('Added chip.');
+    } else {
+      console.log('Value empty.');
     }
 
-    // Clear the input value
     event.chipInput!.clear();
   }
 
@@ -88,13 +90,15 @@ export class SaveVideoDetailsComponent implements OnInit {
     this.selectedFile = $event.target.files[0];
     this.selectedFileName = this.selectedFile.name;
     this.fileSelected = true;
+    console.log('File selected.');
   }
 
   onUpload(): void {
     this.videoService
       .uploadThumnail(this.selectedFile, this.videoId)
       .subscribe((data) => {
-        console.log(data);
+        console.log('data: ' + data + ' Thumbnail uploaded.');
+
         // this.snackBar.open('Thumbnail upload successful', 'OK');
       });
   }
