@@ -1,4 +1,4 @@
-<vg-player>
+<vg-player style="height: 50%">
   <vg-overlay-play></vg-overlay-play>
   <vg-buffering></vg-buffering>
 
@@ -37,7 +37,7 @@
   ></iframe>
 </div>
 
-<video class="video-fluid" autoplay loop muted>
-  <source [src]="videoUrl" type="video/mp4" />
+<video class="video-fluid" style="width: 100%" controls loop muted>
+  <source src="{{ videoUrl }}" />
 </video>
 {{ videoUrl }}

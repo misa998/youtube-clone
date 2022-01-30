@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, SecurityContext } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-video-player',
@@ -10,15 +9,7 @@ export class VideoPlayerComponent implements OnInit {
   @Input()
   videoUrl!: string | '';
 
-  constructor(private sanitizer: DomSanitizer) {
-    console.log(this.videoUrl);
-    let url = this.videoUrl;
-    this.videoUrl = this.sanitizer.sanitize(
-      SecurityContext.URL,
-      this.sanitizer.bypassSecurityTrustUrl(url)
-    ) as string;
-    console.log(this.videoUrl);
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 }
