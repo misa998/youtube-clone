@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  OidcConfigService,
-  OidcSecurityService,
-} from 'angular-auth-oidc-client';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-root',
