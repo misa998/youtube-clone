@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../video.service';
 import { Video } from '../Video';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 // import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -30,8 +31,11 @@ export class SaveVideoDetailsComponent implements OnInit {
   videoUrl!: string;
   thumbnailUrl!: string;
 
+  videoUrlFetched: boolean = false;
+
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private videoService: VideoService, // private snackBar: MatSnackBar
     private sanitizer: DomSanitizer
   ) {
@@ -44,6 +48,7 @@ export class SaveVideoDetailsComponent implements OnInit {
         SecurityContext.RESOURCE_URL,
         this.sanitizer.bypassSecurityTrustResourceUrl(data.videoUrl)
       ) as string;
+      this.videoUrlFetched = true;
       // this.videoUrl = data.videoUrl;
       console.log('Video url sanitized.');
 
@@ -116,5 +121,11 @@ export class SaveVideoDetailsComponent implements OnInit {
     this.videoService.saveVideo(videoMetadata).subscribe((data) => {
       console.log('Video metadata updated.');
     });
+  }
+
+  public viewDetailsRedirect(): void {
+    this.router.navigate([
+      './video-detail/' + this.activatedRoute.snapshot.params.videoId,
+    ]);
   }
 }

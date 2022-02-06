@@ -29,6 +29,7 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { AuthInterceptor } from 'angular-auth-oidc-client';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AuthHeaderInterceptor } from './auth/auth-header-interceptor';
+import { VideoDetailComponent } from './video-detail/video-detail.component';
 // import { MatSnackBar } from '@angular/material/snack-bar';
 
 @NgModule({
@@ -38,6 +39,7 @@ import { AuthHeaderInterceptor } from './auth/auth-header-interceptor';
     HeaderComponent,
     SaveVideoDetailsComponent,
     VideoPlayerComponent,
+    VideoDetailComponent,
   ],
   imports: [
     RouterModule,

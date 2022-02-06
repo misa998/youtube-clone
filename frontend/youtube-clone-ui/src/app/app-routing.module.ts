@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { SaveVideoDetailsComponent } from './save-video-details/save-video-details.component';
 import { UploadVideoComponent } from './upload-video/upload-video.component';
+import { VideoDetailComponent } from './video-detail/video-detail.component';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,10 @@ export const routes: Routes = [
     component: SaveVideoDetailsComponent,
   },
   { path: '', redirectTo: '/upload-video', pathMatch: 'full' },
+  {
+    path: 'video-detail/:videoId',
+    component: VideoDetailComponent,
+  },
 ];
 
 @NgModule({
