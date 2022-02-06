@@ -7,7 +7,7 @@
       class="example-icon favorite-icon"
       aria-label="Example icon-button with heart icon"
     >
-      <mat-icon>video_call</mat-icon>
+      <mat-icon (click)="uploadRedirect()">video_call</mat-icon>
     </button>
     <button
       *ngIf="authenticated; else noAuth"

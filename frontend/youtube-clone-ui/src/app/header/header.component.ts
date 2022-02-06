@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   OidcConfigService,
   OidcSecurityService,
@@ -12,7 +13,10 @@ import {
 export class HeaderComponent implements OnInit {
   authenticated: boolean = false;
 
-  constructor(private oidcSecurityService: OidcSecurityService) {}
+  constructor(
+    private oidcSecurityService: OidcSecurityService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.oidcSecurityService.isAuthenticated$.subscribe(
@@ -28,5 +32,9 @@ export class HeaderComponent implements OnInit {
 
   public logoff(): void {
     this.oidcSecurityService.logoffAndRevokeTokens();
+  }
+
+  public uploadRedirect(): void {
+    this.router.navigate(['./upload-video']);
   }
 }
