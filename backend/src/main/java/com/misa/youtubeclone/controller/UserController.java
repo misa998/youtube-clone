@@ -1,13 +1,12 @@
 package com.misa.youtubeclone.controller;
 
+import com.misa.youtubeclone.model.exceptions.UserRegistrationFailedException;
 import com.misa.youtubeclone.service.UserRegistrationService;
+import com.misa.youtubeclone.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRegistrationService userRegistrationService;
+    private final UserService userService;
 
     @GetMapping("/register")
     @SuppressWarnings("unused")
@@ -25,7 +25,21 @@ public class UserController {
             return "User registration successful";
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error occurred while registering the user.", e);
+            throw new UserRegistrationFailedException("Error occurred while registering the user.", e);
         }
+    }
+
+    @PostMapping("subscribe/{userId}")
+    @SuppressWarnings("unused")
+    public boolean subscribeUser(@PathVariable String userId){
+        userService.subscribe(userId);
+        return true;
+    }
+
+    @PostMapping("unsubscribe/{userId}")
+    @SuppressWarnings("unused")
+    public boolean unSubscribeUser(@PathVariable String userId){
+        userService.unSubscribe(userId);
+        return true;
     }
 }

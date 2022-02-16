@@ -3,15 +3,12 @@ package com.misa.youtubeclone.dto;
 import com.misa.youtubeclone.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
     private String id;
@@ -25,6 +22,14 @@ public class UserDto {
     private Set<String> videoHistory;
     private Set<String> likedVideos;
     private Set<String> dislikedVideos;
+
+    public UserDto() {
+        this.subscribedToUsers = ConcurrentHashMap.newKeySet();
+        this.subscribers = ConcurrentHashMap.newKeySet();
+        this.videoHistory = ConcurrentHashMap.newKeySet();
+        this.likedVideos = ConcurrentHashMap.newKeySet();
+        this.dislikedVideos = ConcurrentHashMap.newKeySet();
+    }
 
     public UserDto(User user) {
         this.id = user.getId();
@@ -77,6 +82,22 @@ public class UserDto {
 
     public void addToVideoHistory(String id) {
         Optional.ofNullable(videoHistory).orElse(ConcurrentHashMap.newKeySet()).add(id);
+    }
+
+    public void addToSubscribedToUsers(String userId) {
+        Optional.ofNullable(getSubscribedToUsers()).orElse(ConcurrentHashMap.newKeySet()).add(userId);
+    }
+
+    public void addToSubscribers(String userId) {
+        Optional.ofNullable(getSubscribers()).orElse(ConcurrentHashMap.newKeySet()).add(userId);
+    }
+
+    public void removeFromSubscribedToUsers(String userId) {
+        getSubscribedToUsers().remove(userId);
+    }
+
+    public void removeFromSubscribers(String userId) {
+        getSubscribers().remove(userId);
     }
 }
 

@@ -2,6 +2,7 @@ package com.misa.youtubeclone.service;
 
 import com.misa.youtubeclone.dto.UserDto;
 import com.misa.youtubeclone.model.User;
+import com.misa.youtubeclone.model.exceptions.UserNotFoundById;
 import com.misa.youtubeclone.model.exceptions.UserNotFoundBySub;
 import com.misa.youtubeclone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +60,27 @@ public class UserService {
         var current = new UserDto(getCurrentUser());
         current.addToVideoHistory(videoId);
         userRepository.save(current.getUser());
+    }
+
+    public void subscribe(String userId) {
+        var currentUserDto = new UserDto(getCurrentUser());
+        currentUserDto.addToSubscribedToUsers(userId);
+
+        var userToSubDto = new UserDto(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundById(userId)));
+        userToSubDto.addToSubscribers(userId);
+
+        userRepository.save(currentUserDto.getUser());
+        userRepository.save(userToSubDto.getUser());
+    }
+
+    public void unSubscribe(String userId) {
+        var currentUserDto = new UserDto(getCurrentUser());
+        currentUserDto.removeFromSubscribedToUsers(userId);
+
+        var userToSubDto = new UserDto(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundById(userId)));
+        userToSubDto.removeFromSubscribers(userId);
+
+        userRepository.save(currentUserDto.getUser());
+        userRepository.save(userToSubDto.getUser());
     }
 }
