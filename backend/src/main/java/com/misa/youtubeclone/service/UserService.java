@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -82,5 +83,10 @@ public class UserService {
 
         userRepository.save(currentUserDto.getUser());
         userRepository.save(userToSubDto.getUser());
+    }
+
+    public Set<String> getUserHistory(String userId) {
+        var userDto = new UserDto(getCurrentUser());
+        return userDto.getVideoHistory();
     }
 }

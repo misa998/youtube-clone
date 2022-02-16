@@ -3,7 +3,6 @@ package com.misa.youtubeclone.controller;
 import com.misa.youtubeclone.dto.CommentDto;
 import com.misa.youtubeclone.dto.UploadVideoResponse;
 import com.misa.youtubeclone.dto.VideoDto;
-import com.misa.youtubeclone.model.Comment;
 import com.misa.youtubeclone.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,6 +69,18 @@ public class VideoController {
     @SuppressWarnings("unused")
     public List<CommentDto> getAllComments(@PathVariable String videoId){
         return videoService.getAllComments(videoId);
+    }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<VideoDto> getAllVideos(){
+        return videoService.getAllVideos();
+    }
+
+    @GetMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<VideoDto> getAllVideos(@PathVariable String userId){
+        return videoService.getVideosByUserId(userId);
     }
 
 }

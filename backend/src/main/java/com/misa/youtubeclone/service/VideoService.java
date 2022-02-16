@@ -120,4 +120,12 @@ public class VideoService {
         List<Comment> commentList = videoDto.getCommentList();
         return commentList.stream().map(CommentDto::new).collect(Collectors.toList());
     }
+
+    public List<VideoDto> getAllVideos() {
+        return videoRepository.findAll().stream().map(VideoDto::new).collect(Collectors.toList());
+    }
+
+    public List<VideoDto> getVideosByUserId(String userId){
+        return videoRepository.findByUserId(userId);
+    }
 }

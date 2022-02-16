@@ -81,15 +81,15 @@ public class UserDto {
     }
 
     public void addToVideoHistory(String id) {
-        Optional.ofNullable(videoHistory).orElse(ConcurrentHashMap.newKeySet()).add(id);
+        getVideoHistory().add(id);
     }
 
     public void addToSubscribedToUsers(String userId) {
-        Optional.ofNullable(getSubscribedToUsers()).orElse(ConcurrentHashMap.newKeySet()).add(userId);
+        getSubscribedToUsers().add(userId);
     }
 
     public void addToSubscribers(String userId) {
-        Optional.ofNullable(getSubscribers()).orElse(ConcurrentHashMap.newKeySet()).add(userId);
+        getSubscribers().add(userId);
     }
 
     public void removeFromSubscribedToUsers(String userId) {
@@ -98,6 +98,18 @@ public class UserDto {
 
     public void removeFromSubscribers(String userId) {
         getSubscribers().remove(userId);
+    }
+
+    public Set<String> getVideoHistory(){
+        return Optional.ofNullable(this.videoHistory).orElse(ConcurrentHashMap.newKeySet());
+    }
+
+    public Set<String> getSubscribers(){
+        return Optional.ofNullable(this.subscribers).orElse(ConcurrentHashMap.newKeySet());
+    }
+
+    public Set<String> getSubscribedToUsers(){
+        return Optional.ofNullable(this.subscribedToUsers).orElse(ConcurrentHashMap.newKeySet());
     }
 }
 
