@@ -1,14 +1,18 @@
 package com.misa.youtubeclone.service;
 
+import com.misa.youtubeclone.dto.CommentDto;
 import com.misa.youtubeclone.dto.UploadVideoResponse;
 import com.misa.youtubeclone.dto.VideoDto;
+import com.misa.youtubeclone.model.Comment;
 import com.misa.youtubeclone.model.Video;
 import com.misa.youtubeclone.model.exceptions.VideoNotFoundById;
 import com.misa.youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,10 +67,10 @@ public class VideoService {
 
     public VideoDto likeVideo(String videoId) {
         VideoDto video = new VideoDto(fetchVideoById(videoId));
-        if(userService.isLikedVideo(videoId)) {
+        if (userService.isLikedVideo(videoId)) {
             video.decrementLikes();
             userService.removeLikedVideo(videoId);
-        } else if(userService.isDislikedVideo(videoId)){
+        } else if (userService.isDislikedVideo(videoId)) {
             video.decrementDislikes();
             userService.removeDislikedVideo(videoId);
             video.incrementLikes();
@@ -83,10 +87,10 @@ public class VideoService {
 
     public VideoDto dislikeVideo(String videoId) {
         VideoDto video = new VideoDto(fetchVideoById(videoId));
-        if(userService.isDislikedVideo(videoId)) {
+        if (userService.isDislikedVideo(videoId)) {
             video.decrementDislikes();
             userService.removeDislikedVideo(videoId);
-        } else if(userService.isLikedVideo(videoId)){
+        } else if (userService.isLikedVideo(videoId)) {
             video.decrementLikes();
             userService.removeLikedVideo(videoId);
             video.incrementDislikes();
@@ -99,5 +103,21 @@ public class VideoService {
         videoRepository.save(video.getEntity());
 
         return video;
+    }
+
+    public void addComment(String videoId, CommentDto commentDto) {
+        var videoDto = new VideoDto(fetchVideoById(videoId));
+        videoDto.addComment(mapCommentFromDto(commentDto));
+        videoRepository.save(videoDto.getEntity());
+    }
+
+    private Comment mapCommentFromDto(CommentDto dto) {
+        return new Comment(dto.getId(), dto.getText(), dto.getCreateUserId(), dto.getLikeCount().get(), dto.getDislikeCount().get());
+    }
+
+    public List<CommentDto> getAllComments(String videoId) {
+        var videoDto = new VideoDto(fetchVideoById(videoId));
+        List<Comment> commentList = videoDto.getCommentList();
+        return commentList.stream().map(CommentDto::new).collect(Collectors.toList());
     }
 }

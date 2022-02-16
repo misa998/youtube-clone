@@ -1,12 +1,16 @@
 package com.misa.youtubeclone.controller;
 
+import com.misa.youtubeclone.dto.CommentDto;
 import com.misa.youtubeclone.dto.UploadVideoResponse;
 import com.misa.youtubeclone.dto.VideoDto;
+import com.misa.youtubeclone.model.Comment;
 import com.misa.youtubeclone.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/video")
@@ -53,4 +57,19 @@ public class VideoController {
     public VideoDto dislikeVideo(@PathVariable String videoId){
         return videoService.dislikeVideo(videoId);
     }
+
+    @PostMapping("/{videoId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    @SuppressWarnings("unused")
+    public void addComment(@PathVariable String videoId, @RequestBody CommentDto commentDto){
+        videoService.addComment(videoId, commentDto);
+    }
+
+    @GetMapping("/{videoId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    @SuppressWarnings("unused")
+    public List<CommentDto> getAllComments(@PathVariable String videoId){
+        return videoService.getAllComments(videoId);
+    }
+
 }

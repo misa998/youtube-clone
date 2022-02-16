@@ -4,6 +4,7 @@ import com.misa.youtubeclone.model.exceptions.UserRegistrationFailedException;
 import com.misa.youtubeclone.service.UserRegistrationService;
 import com.misa.youtubeclone.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/register")
+    @ResponseStatus(HttpStatus.OK)
     @SuppressWarnings("unused")
     public String register(Authentication auth){
         try {
@@ -30,6 +32,7 @@ public class UserController {
     }
 
     @PostMapping("subscribe/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     @SuppressWarnings("unused")
     public boolean subscribeUser(@PathVariable String userId){
         userService.subscribe(userId);
@@ -37,6 +40,7 @@ public class UserController {
     }
 
     @PostMapping("unsubscribe/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     @SuppressWarnings("unused")
     public boolean unSubscribeUser(@PathVariable String userId){
         userService.unSubscribe(userId);

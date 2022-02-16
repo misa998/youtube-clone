@@ -7,10 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
@@ -48,7 +46,7 @@ public class VideoDto {
         this.videoStatus = VideoStatus.PRIVATE;
         this.likes = new AtomicInteger(0);
         this.dislikes = new AtomicInteger(0);
-        this.commentList = new ArrayList<>();
+        this.commentList = new CopyOnWriteArrayList<>();
     }
 
     public void incrementLikes() {
@@ -89,5 +87,13 @@ public class VideoDto {
 
     public void incrementViewCount() {
         viewCount.incrementAndGet();
+    }
+
+    public List<Comment> getCommentList(){
+        return Optional.ofNullable(this.commentList).orElse(new CopyOnWriteArrayList<>());
+    }
+
+    public void addComment(Comment comment) {
+        getCommentList().add(comment);
     }
 }

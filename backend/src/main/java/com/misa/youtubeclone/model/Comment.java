@@ -13,7 +13,7 @@ public class Comment {
     @Id
     private String id;
     private String text;
-    private String authorId;
+    private String createUserId;
     private Integer likeCount;
     private Integer disLikeCount;
 }
