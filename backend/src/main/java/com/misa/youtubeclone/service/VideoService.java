@@ -3,9 +3,11 @@ package com.misa.youtubeclone.service;
 import com.misa.youtubeclone.dto.UploadVideoResponse;
 import com.misa.youtubeclone.dto.VideoDto;
 import com.misa.youtubeclone.model.Video;
+import com.misa.youtubeclone.model.exceptions.VideoNotFoundById;
 import com.misa.youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -14,6 +16,7 @@ public class VideoService {
 
     private final S3Service s3Service;
     private final VideoRepository videoRepository;
+    private final UserService userService;
 
     public UploadVideoResponse uploadVideo(MultipartFile file) {
         String videoUrl = s3Service.uploadFile(file);
@@ -38,7 +41,7 @@ public class VideoService {
     }
 
     private Video fetchVideoById(String id) {
-        return videoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cannot find video by id " + id));
+        return videoRepository.findById(id).orElseThrow(() -> new VideoNotFoundById(id));
     }
 
     public String uploadThumbnail(MultipartFile file, String videoId) {
@@ -52,6 +55,49 @@ public class VideoService {
     }
 
     public VideoDto getVideoDetails(String videoId) {
-        return new VideoDto(fetchVideoById(videoId));
+        var video = new VideoDto(fetchVideoById(videoId));
+        video.incrementViewCount();
+        userService.addVideoToHistory(video.getId());
+        return new VideoDto(videoRepository.save(video.getEntity()));
+    }
+
+    public VideoDto likeVideo(String videoId) {
+        VideoDto video = new VideoDto(fetchVideoById(videoId));
+        if(userService.isLikedVideo(videoId)) {
+            video.decrementLikes();
+            userService.removeLikedVideo(videoId);
+        } else if(userService.isDislikedVideo(videoId)){
+            video.decrementDislikes();
+            userService.removeDislikedVideo(videoId);
+            video.incrementLikes();
+            userService.addToLikedVideos(videoId);
+        } else {
+            video.incrementLikes();
+            userService.addToLikedVideos(videoId);
+        }
+
+        videoRepository.save(video.getEntity());
+
+        return video;
+    }
+
+    public VideoDto dislikeVideo(String videoId) {
+        VideoDto video = new VideoDto(fetchVideoById(videoId));
+        if(userService.isDislikedVideo(videoId)) {
+            video.decrementDislikes();
+            userService.removeDislikedVideo(videoId);
+        } else if(userService.isLikedVideo(videoId)){
+            video.decrementLikes();
+            userService.removeLikedVideo(videoId);
+            video.incrementDislikes();
+            userService.addToDislikedVideo(videoId);
+        } else {
+            video.incrementDislikes();
+            userService.addToDislikedVideo(videoId);
+        }
+
+        videoRepository.save(video.getEntity());
+
+        return video;
     }
 }

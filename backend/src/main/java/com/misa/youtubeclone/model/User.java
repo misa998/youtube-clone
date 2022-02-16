@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Document(value = "User")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
@@ -25,7 +24,7 @@ public class User {
     private String sub;
     private Set<String> subscribedToUsers;
     private Set<String> subscribers;
-    private List<String> videoHistory;
+    private Set<String> videoHistory;
     private Set<String> likedVideos;
     private Set<String> disLikedVideos;
 
@@ -37,4 +36,13 @@ public class User {
         this.emailAddress = userInfoDTO.getEmail();
         this.sub = userInfoDTO.getSub();
     }
+
+    public User(){
+        this.subscribedToUsers = new HashSet<>();
+        this.subscribers = new HashSet<>();
+        this.videoHistory = ConcurrentHashMap.newKeySet();
+        this.likedVideos = new HashSet<>();
+        this.disLikedVideos = new HashSet<>();
+    }
 }
+
